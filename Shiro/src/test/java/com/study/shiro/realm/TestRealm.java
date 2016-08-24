@@ -1,4 +1,4 @@
-package com.study.shiro.helloworld;
+package com.study.shiro.realm;
 
 import junit.framework.Assert;
 
