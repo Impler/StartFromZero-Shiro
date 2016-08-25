@@ -11,6 +11,10 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.junit.Test;
 
+/**
+ * A Realm is essentially a security-specific DAO
+ * @author impler
+ */
 public class TestRealm {
 
 	@Test
