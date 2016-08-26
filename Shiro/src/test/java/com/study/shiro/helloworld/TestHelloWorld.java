@@ -15,7 +15,7 @@ public class TestHelloWorld {
 	public void testValid() {
 		
 		// 此处为org.apache.shiro.mgt.SecurityManager，而非java.lang.SecurityManager
-		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro-helloworld.ini");
+		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:iniconfig/shiro-helloworld.ini");
 		
 		SecurityManager sm = factory.getInstance();
 		
@@ -33,7 +33,7 @@ public class TestHelloWorld {
 	public void testInValid() {
 		
 		// 此处为org.apache.shiro.mgt.SecurityManager，而非java.lang.SecurityManager
-		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro-helloworld.ini");
+		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:iniconfig/shiro-helloworld.ini");
 		
 		SecurityManager sm = factory.getInstance();
 		

@@ -19,7 +19,7 @@ public class TestRealm {
 
 	@Test
 	public void testRightAuth() {
-		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro-realm.ini");
+		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:iniconfig/shiro-realm.ini");
 		
 		SecurityManager sm = factory.getInstance();
 	
@@ -38,7 +38,7 @@ public class TestRealm {
 	
 	@Test(expected=AuthenticationException.class)
 	public void testInvalidAuth() {
-		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro-realm.ini");
+		Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:iniconfig/shiro-realm.ini");
 		
 		SecurityManager sm = factory.getInstance();
 		
