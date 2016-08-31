@@ -16,7 +16,8 @@ public class SaltRealm extends IniRealm{
 
 	
 	public SaltRealm() {
-		super("classpath:/shiro-authentication-credentialsMatcher.ini");
+		// 先初始化IniRealm
+		super("classpath:iniconfig/shiro-authentication-credentialsMatcher.ini");
 	}
 	
 	@Override
@@ -28,6 +29,7 @@ public class SaltRealm extends IniRealm{
 		
 		//正常情况下，用户的salt应该存放在数据库中动态获取，这里为了测试方便，仅针对用户lisi使用salt功能
 		if("lisi".equals((String)info.getPrincipals().getPrimaryPrincipal())){
+			// 设置盐值
 			info.setCredentialsSalt(ByteSource.Util.bytes("123"));
 		}
 		
