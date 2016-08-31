@@ -145,4 +145,10 @@ public class TestShiroEncrypt {
 	    
 	    Assert.assertEquals(msg, decodeStr);   
 	}
+	
+	@Test
+	public void test(){
+		Md5Hash hs = new Md5Hash("123abc");
+		System.out.println(hs.toString());
+	}
 }
