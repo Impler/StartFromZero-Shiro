@@ -7,7 +7,7 @@
 <title>登录</title>
 </head>
 <body>
-	<form action="login" method="post">
+	<form action="login.jsp" method="post">
 		<label>用户名：</label> <input type="text" name="userName"> <br />
 		<label>密码：</label> <input type="password" name="passWord"> <br />
 		<input type="submit" value="登录" />
