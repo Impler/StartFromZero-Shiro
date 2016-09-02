@@ -4,11 +4,11 @@
 
 ##Authentication
 ###Authenticator层级关系
-Authenticator接口用于验证用户身份，是Shiro API的入口。
+*`Authenticator`*接口用于验证用户身份，是Shiro API的入口。
 ```java
 public AuthenticationInfo authenticate(AuthenticationToken authenticationToken) throws AuthenticationException;
 ```
-- **implements <--** AbstractAuthenticator 所有Authenticator的抽象父类，细化了身份验证的流程，并提供了登录成功/失败以及退出的事件通知
+- **implements <--** `AbstractAuthenticator` 所有Authenticator的抽象父类，细化了身份验证的流程，并提供了登录成功/失败以及退出的事件通知
 ```java
 // 通知监听器
 private Collection<AuthenticationListener> listeners;
@@ -32,7 +32,7 @@ public void onLogout(PrincipalCollection principals) {
     notifyLogout(principals);
 }
 ```
-	- **extends<--** ModularRealmAuthenticator 调用配置的Realm(s)完成验证操作
+	- **extends<--** `ModularRealmAuthenticator` 调用配置的Realm(s)完成验证操作
 ```java
 // 实现父类抽象方法
 protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
