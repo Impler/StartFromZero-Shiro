@@ -13,7 +13,7 @@ import org.junit.Test;
 
 /**
  * A Realm is essentially a security-specific DAO
- * Realm 可以处理Authentication过程和Authorization过程。分别对应Realm接口和Authorizer接口,
+ * Realm 可以处理Authentication过程和Authorization过程。分别对应Authenticator接口和Authorizer接口,
  * AuthorizingRealm抽象类结合了这两者，一般自定义Realm继承AuthorizingRealm即可
  * @author impler
  */
