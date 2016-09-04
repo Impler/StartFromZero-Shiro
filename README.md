@@ -103,6 +103,11 @@ public final AuthenticationInfo getAuthenticationInfo(AuthenticationToken token)
     }
     return info;
 }
+ /**
+ * 依赖子类实现
+ * 该方法一般只需要从数据库中取出待验证的用户信息，剩下的工作如登录等交给Shiro完成。
+*/
+protected abstract AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException;
 ```
 **1.1.1 (extends)** `AuthorizingRealm`  
 **1.1.1.1 (extends)** `SimpleAccountRealm`  
@@ -156,8 +161,9 @@ protected AuthenticationInfo doMultiRealmAuthentication(Collection<Realm> realms
 	// 不同的策略，最终表现在返回的AuthenticationInfo对象中，是合并上一步的结果还是代替等等
 	AuthenticationStrategy strategy = getAuthenticationStrategy();
 	AuthenticationInfo aggregate = strategy.beforeAllAttempts(realms, token)
-	//　遍历Realm，执行其
+	//　遍历Realm，执行其验证操作
 	for (Realm realm : realms) {
+		// 根据策略的不同，重组AuthenticationInfo
 	    aggregate = strategy.beforeAttempt(realm, token, aggregate);
 	    if (realm.supports(token)) {
 	        AuthenticationInfo info = null;
@@ -166,13 +172,13 @@ protected AuthenticationInfo doMultiRealmAuthentication(Collection<Realm> realms
 				// 验证操作
 	            info = realm.getAuthenticationInfo(token);
 	        } catch (Throwable throwable) {
-	            
 	        }
+			// 根据策略的不同，重组AuthenticationInfo
 	        aggregate = strategy.afterAttempt(realm, token, info, aggregate, t);
 	    } else {
-	        
 	    }
 	}
+	// 根据策略的不同，重组AuthenticationInfo
 	aggregate = strategy.afterAllAttempts(token, aggregate);
 	return aggregate;
 }
