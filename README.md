@@ -17,15 +17,15 @@ Object getPrincipal();
 // 密码等凭证
 Object getCredentials();
 ```
-**1 <extends>** *`HostAuthenticationToken`*获取用户主机信息(IP)，同`ServletRequest.getRemoteHost()`  
+**1 (extends)** *`HostAuthenticationToken`*获取用户主机信息(IP)，同`ServletRequest.getRemoteHost()`  
 ```java
 String getHost();
 ```
-**2 <extends>** *`RememberMeAuthenticationToken`*是否跨session保存用户标识信息
+**2 (extends)** *`RememberMeAuthenticationToken`*是否跨session保存用户标识信息
 ```java
 boolean isRememberMe();
 ```
-**1.1/2.1 <implements>** `UsernamePasswordToken`实现了上面两者，提供了一般基于用户名/密码形式的验证机制  
+**1.1/2.1 (implements)** `UsernamePasswordToken`实现了上面两者，提供了一般基于用户名/密码形式的验证机制  
 
 ### AuthenticationInfo接口
 *`AuthenticationInfo`*保存通过验证流程的用户的数据，而`AuthenticationToken`保存的是验证请求中、未经验证的数据  
@@ -35,18 +35,18 @@ PrincipalCollection getPrincipals();
 // 密码等凭证
 Object getCredentials();
 ```
-**1 <extends>** *`SaltedAuthenticationInfo`* 为了加强密码凭证的安全性，提供salt接口
+**1 (extends)** *`SaltedAuthenticationInfo`* 为了加强密码凭证的安全性，提供salt接口
 ```java
 ByteSource getCredentialsSalt();
 ```
-**2 <extends>** *`MergableAuthenticationInfo`* 在多Realm条件下(下面会解释)，提供合并`AuthenticationInfo`的接口
+**2 (extends)** *`MergableAuthenticationInfo`* 在多Realm条件下(下面会解释)，提供合并`AuthenticationInfo`的接口
 ```java
 void merge(AuthenticationInfo info);
 ```
 
-**1.1/2.1 <implements>** `SimpleAuthenticationInfo` 实现了上面两者  
+**1.1/2.1 (implements)** `SimpleAuthenticationInfo` 实现了上面两者  
 
-**3 <implements>** `SimpleAccount` 融合了`AuthenticationInfo`和`AuthorizationInfo`, 静态代理了`SimpleAuthenticationInfo`的功能，后面详解
+**3 (implements)** `SimpleAccount` 融合了`AuthenticationInfo`和`AuthorizationInfo`, 静态代理了`SimpleAuthenticationInfo`的功能，后面详解
 ```java
 public class SimpleAccount implements Account, MergableAuthenticationInfo, SaltedAuthenticationInfo, Serializable {
     private SimpleAuthenticationInfo authcInfo;
@@ -86,8 +86,8 @@ boolean supports(AuthenticationToken token);
 // 执行真正的验证工作
 AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException;
 ```
-**1 <implements>** `CachingRealm` 基本的Realm抽象实现，提供cache功能  
-**1.1 <extends>** `AuthenticatingRealm` 在登录流程中提供用户身份验证功能，一般登录实现继承该抽象类即可  
+**1 (implements)** `CachingRealm` 基本的Realm抽象实现，提供cache功能  
+**1.1 (extends)** `AuthenticatingRealm` 在登录流程中提供用户身份验证功能，一般登录实现继承该抽象类即可  
 ```java
 public final AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
     AuthenticationInfo info = getCachedAuthenticationInfo(token);
@@ -104,16 +104,16 @@ public final AuthenticationInfo getAuthenticationInfo(AuthenticationToken token)
     return info;
 }
 ```
-**1.1.1 <extends>** `AuthorizingRealm`  
-**1.1.1.1 <extends>** `SimpleAccountRealm`  
-**1.1.1.1.1 <extends>** `IniRealm`  
+**1.1.1 (extends)** `AuthorizingRealm`  
+**1.1.1.1 (extends)** `SimpleAccountRealm`  
+**1.1.1.1.1 (extends)** `IniRealm`  
 
 ### Authenticator接口
 *`Authenticator`*接口用于验证用户身份，是Shiro API的入口。
 ```java
 public AuthenticationInfo authenticate(AuthenticationToken authenticationToken) throws AuthenticationException;
 ```
-**1 <implements>** `AbstractAuthenticator` 所有Authenticator的抽象父类，细化了身份验证的流程，并提供了登录成功/失败以及退出的事件通知
+**1 (implements)** `AbstractAuthenticator` 所有Authenticator的抽象父类，细化了身份验证的流程，并提供了登录成功/失败以及退出的事件通知
 ```java
 // 通知监听器
 private Collection<AuthenticationListener> listeners;
@@ -137,7 +137,7 @@ public void onLogout(PrincipalCollection principals) {
     notifyLogout(principals);
 }
 ```
-**1.1 <extends>** *`ModularRealmAuthenticator`* 调用配置的Realm(s)完成验证操作
+**1.1 (extends)** *`ModularRealmAuthenticator`* 调用配置的Realm(s)完成验证操作
 ```java
 // 实现父类抽象方法
 protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
