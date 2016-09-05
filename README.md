@@ -109,7 +109,11 @@ public final AuthenticationInfo getAuthenticationInfo(AuthenticationToken token)
 */
 protected abstract AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException;
 ```
-**1.1.1 (extends)** `AuthorizingRealm`  
+**1.1.1 (extends)** `AuthorizingRealm`继承了Authentication的衣钵，又融合了Authorization的鉴权功能  
+```java
+public abstract class AuthorizingRealm extends AuthenticatingRealm
+        implements Authorizer, Initializable, PermissionResolverAware, RolePermissionResolverAware
+```
 **1.1.1.1 (extends)** `SimpleAccountRealm`  
 **1.1.1.1.1 (extends)** `IniRealm`  
 
