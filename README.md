@@ -7,7 +7,8 @@ Authentication是一个验证身份的完整过程，包括：
 - 收集用户验证信息 --> `AuthenticationToken`
 - 进入Shiro身份验证 --> `Authenticator`
 - 执行真正的验证工作 --> `Realm`
-- 验证失败，直接抛出`AuthenticationException`;验证通过，返回用户信息 --> `AuthenticationInfo`
+- 验证失败，直接抛出`AuthenticationException`
+- 验证通过，返回用户信息 --> `AuthenticationInfo`
 
 ### AuthenticationToken接口
 *`AuthenticationToken`* 用户登录凭证，包含两个方法:  
@@ -26,6 +27,7 @@ String getHost();
 boolean isRememberMe();
 ```
 **1.1/2.1 (implements)** `UsernamePasswordToken`实现了上面两者，提供了一般基于用户名/密码形式的验证机制  
+![AuthenticationTokenHierarchy](resource/images/AuthenticationTokenHierarchy.png)
 
 ### AuthenticationInfo接口
 *`AuthenticationInfo`*保存通过验证流程的用户的数据，而`AuthenticationToken`保存的是验证请求中、未经验证的数据  
@@ -75,6 +77,7 @@ public class SimpleAccount implements Account, MergableAuthenticationInfo, Salte
     }
 }
 ```
+![AuthenticationInfoHierarchy](resource/images/AuthenticationInfoHierarchy.png)
 
 ### Realm接口
 *`Realm`*是一个系统安全组件，可以访问特定系统的安全部件，包括用户、角色、权限等。*`Realm`*可以在Authentication和Ahthorization流程中工作。  
