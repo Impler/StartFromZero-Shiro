@@ -27,7 +27,7 @@ String getHost();
 boolean isRememberMe();
 ```
 **1.1/2.1 (implements)** `UsernamePasswordToken`实现了上面两者，提供了一般基于用户名/密码形式的验证机制  
-![AuthenticationTokenHierarchy](resource/images/AuthenticationTokenHierarchy.png)
+![AuthenticationTokenHierarchy](resources/images/AuthenticationTokenHierarchy.png)
 
 ### AuthenticationInfo接口
 *`AuthenticationInfo`*保存通过验证流程的用户的数据，而`AuthenticationToken`保存的是验证请求中、未经验证的数据  
@@ -77,7 +77,7 @@ public class SimpleAccount implements Account, MergableAuthenticationInfo, Salte
     }
 }
 ```
-![AuthenticationInfoHierarchy](resource/images/AuthenticationInfoHierarchy.png)
+![AuthenticationInfoHierarchy](resources/images/AuthenticationInfoHierarchy.png)
 
 ### Realm接口
 *`Realm`*是一个系统安全组件，可以访问特定系统的安全部件，包括用户、角色、权限等。*`Realm`*可以在Authentication和Ahthorization流程中工作。  
