@@ -26,11 +26,6 @@ WebEnvironment对象包含WebSecurityManager对象。
 #### 2.1 EnvironmentLoaderListener
 EnvironmentLoaderListener是EnvironmentLoader的扩展，核心功能仍由EnvironmentLoader提供，但实现了ServletContextListener接口，能够在Web容器启动或关闭时创建或销毁WebEnvironment对象。
 
-## Tips
-Shiro内部对工厂模式的使用案例：
-![ShiroFactory](resources/images/ShiroFactory.png)  
-充分运用Java特性，首先抽象出一个工厂接口Factory<T>，继而实现统一的工厂方法，层层递进，一步步重用公共代码，下放具体接口，直到具体实现。代码层次清晰，便于扩展。  
-
 ### 3 Filter
 Shiro web的验证基于Filter实现。ShiroFilter拦截所有请求，是Shiro验证机制的入口。  
 ### 3.1 AbstractFilter
@@ -49,5 +44,11 @@ AbstractShiroFilter 基本实现了所有Shiro Filter的标准行为，子类仅
 需要配置在web.xml中，拦截所有请求。  
 此外，ShiroFilter需要依赖WebEnvironment的配置信息，所以必须在web.xml中配置EnvironmentLoaderListener，在容器启动时创建WebEnvironment对象。  
 ![ShiroFilterHierarchy](resources/images/ShiroFilterHierarchy.png)  
+
+## Tips
+Shiro内部对工厂模式的使用案例：
+![ShiroFactory](resources/images/ShiroFactory.png)  
+充分运用Java特性，首先抽象出一个工厂接口Factory<T>，继而实现统一的工厂方法，层层递进，一步步重用公共代码，下放具体接口，直到具体实现。代码层次清晰，便于扩展。  
+
 
 ~ 未完，待续 ~
