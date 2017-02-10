@@ -26,4 +26,9 @@ WebEnvironment对象包含WebSecurityManager对象。
 #### EnvironmentLoaderListener
 EnvironmentLoaderListener是EnvironmentLoader的扩展，核心功能仍由EnvironmentLoader提供，但实现了ServletContextListener接口，能够在Web容器启动或关闭时创建或销毁WebEnvironment对象。
 
+## Tips
+Shiro内部对工厂模式的使用案例：
+![ShiroFactory](resources/images/ShiroFactory.png)  
+充分运用Java特性，首先抽象出一个工厂接口Factory<T>，继而实现统一的工厂方法，层层递进，一步步重用公共代码，下放具体接口，直到具体实现。代码层次清晰，便于扩展。  
+
 ~ 未完，待续 ~
