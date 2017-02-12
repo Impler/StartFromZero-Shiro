@@ -41,9 +41,11 @@ AbstractShiroFilter 基本实现了所有Shiro Filter的标准行为，子类仅
 
 ######## 3.1.1.1.1.1 ShiroFilter
 最基本的、可用的Shiro Filter。  
-需要配置在web.xml中，拦截所有请求。  
+需要配置在web.xml中，拦截所有请求，然后按照配置分发到具体的Access Control Filter。  
 此外，ShiroFilter需要依赖WebEnvironment的配置信息，所以必须在web.xml中配置EnvironmentLoaderListener，在容器启动时创建WebEnvironment对象。  
 ![ShiroFilterHierarchy](resources/images/ShiroFilterHierarchy.png)  
+ShiroFilter处理请求时序图：  
+![ShiroFilterSeq](resources/images/ShiroFilterSeq.png)  
 
 ####### 3.1.1.1.2 AdviceFilter
 AdviceFilter提供了类似AOP环绕增强的机制，方便在请求过滤器链处理前(preHandle)、处理后(postHandle)和完成后(afterCompletion)添加具体的逻辑。具体请看doFilterInternal()方法的实现：  
@@ -70,8 +72,8 @@ public void doFilterInternal(ServletRequest request, ServletResponse response, F
 ```
 ![AdviceFilterHierarchy](resources/images/AdviceFilterHierarchy.png)  
 
-### 4 Shiro Default Filter
-接下来介绍的几个Filter是Shiro Filter继承体系中的成员，是完成Shiro机制的默认Filter，但为了避免文档结构层次过多，特单独抽取出来。
+### 4 Shiro Access Control Filter
+接下来介绍的几个Filter是Shiro Filter继承体系中的成员，是完成Shiro权限验证机制的Filter，但为了避免文档结构层次过多，特单独抽取出来。
 
 #### 4.1 PathMatchingFilter
 基于匹配请求URL的过滤器，匹配的请求将会被Shiro继续处理，否则直接通过该过滤器。  
@@ -141,7 +143,7 @@ AuthenticationFilter可以处理用户验证逻辑的请求(登录请求)。
 验证当前用户是否拥有指定角色。  
 
 ![DefaultFilterHierarchy](resources/images/DefaultFilterHierarchy.png)  
-
+//todo access control filter时序图
 
 ## Tips
 Shiro内部对工厂模式的使用案例：
