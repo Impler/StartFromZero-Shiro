@@ -1,4 +1,4 @@
-package com.study.shiro.authentication;
+package com.study.shiro._02authentication;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;

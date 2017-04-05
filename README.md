@@ -1,6 +1,12 @@
 # StartFromZero-Shiro
+- Subject：与当前程序交互的任何实体，不仅仅指用户（人），也可以是线程、定时任务等
+- Realm：是一个特定安全的DAO，是shiro与程序安全数据之间连接的桥梁
 - Authentication：完成身份验证
 - Authorization：完成权限认证
+- SessionManager：同HttpSession，但不仅仅依赖HttpSession。负责创建及管理用户生命周期
+- CacheManager：缓存
+- Cryptography：密码加密
+- SecurityManager：协调各组件工作
 
 ## Authentication
 Authentication是一个验证身份的完整过程，包括：  

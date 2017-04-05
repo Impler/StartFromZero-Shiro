@@ -1,4 +1,4 @@
-package com.study.shiro.authentication.credentialsMatcher;
+package com.study.shiro._02authentication.credentialsMatcher;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;

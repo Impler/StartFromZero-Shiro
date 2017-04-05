@@ -1,4 +1,4 @@
-package com.study.shiro.helloworld;
+package com.study.shiro._01helloworld;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;

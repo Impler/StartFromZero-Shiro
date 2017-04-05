@@ -1,4 +1,4 @@
-package com.study.shiro.authorization;
+package com.study.shiro._03authorization;
 
 import java.util.ArrayList;
 import java.util.List;
