@@ -8,6 +8,10 @@
 - Cryptography：密码加密
 - SecurityManager：协调各组件工作
 
+## Subject
+Subject包含了一个用户的所有安全性操作集合，包括登录/退出、鉴权等。  
+DelegatingSubject是Shiro提供的Subject接口的默认实现。本质上，DelegatingSubject就是一个SecurityManager的代理，其所有的操作均通过调用SecurityManager来实现。  
+
 ## Authentication
 Authentication是一个验证身份的完整过程，包括：  
 - 收集用户验证信息 --> `AuthenticationToken`
