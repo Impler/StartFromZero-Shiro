@@ -28,11 +28,11 @@ Object getPrincipal();
 // 密码等凭证
 Object getCredentials();
 ```
-**1 (extends)** *`HostAuthenticationToken`*获取用户主机信息(IP)，同`ServletRequest.getRemoteHost()`  
+**1 (extends)** *`HostAuthenticationToken`* 获取用户主机信息(IP)，同`ServletRequest.getRemoteHost()`  
 ```java
 String getHost();
 ```
-**2 (extends)** *`RememberMeAuthenticationToken`*是否跨session保存用户标识信息
+**2 (extends)** *`RememberMeAuthenticationToken`* 是否跨session保存用户标识信息
 ```java
 boolean isRememberMe();
 ```
@@ -58,7 +58,7 @@ void merge(AuthenticationInfo info);
 
 **1.1/2.1 (implements)** `SimpleAuthenticationInfo` 实现了上面两者  
 
-**3 (implements)** `SimpleAccount` 融合了`AuthenticationInfo`和`AuthorizationInfo`, 静态代理了`SimpleAuthenticationInfo`的功能，后面详解
+**3 (implements)** *`Account`* 融合了`AuthenticationInfo`和`AuthorizationInfo`, `SimpleAccount`是其默认实现，通过静态代理`SimpleAuthenticationInfo`、`SimpleAuthorizationInfo`，既提供身份鉴别功能有能提供鉴权功能
 ```java
 public class SimpleAccount implements Account, MergableAuthenticationInfo, SaltedAuthenticationInfo, Serializable {
     private SimpleAuthenticationInfo authcInfo;
@@ -90,7 +90,7 @@ public class SimpleAccount implements Account, MergableAuthenticationInfo, Salte
 ![AuthenticationInfoHierarchy](resources/images/AuthenticationInfoHierarchy.png)
 
 ### Realm接口
-*`Realm`*是一个系统安全组件，可以访问特定系统的安全部件，包括用户、角色、权限等。*`Realm`*可以在Authentication和Ahthorization流程中工作。  
+*`Realm`* 是一个系统安全组件，可以访问特定系统的安全部件，包括用户、角色、权限等。*`Realm`* 可以在Authentication和Ahthorization流程中工作。  
 ```java
 // 全局唯一的名称
 String getName();
