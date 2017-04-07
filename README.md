@@ -181,7 +181,7 @@ public interface AuthorizationInfo extends Serializable {
 }
 
 ```
-**1 (implements)** `SimpleAuthorizationInfo`是*`AuthorizationInfo`* 的简单实现。  
+**1 (implements)** `SimpleAuthorizationInfo`是 *`AuthorizationInfo`* 的简单实现。  
 
 ![AuthorizationInfoHierarchy](resources/images/AuthorizationInfoHierarchy.png)
 
@@ -253,12 +253,12 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm
 
 [TODO 此处应有Reaml继承层级图]
 
-## SessionManager
+## SessionManager  
 Shiro提供了一套完整的企业级Session管理机制。其适用于所有程序，而不依赖Web容器或EJB。  
 *`SessionManager`* 接口负责创建、维护、清理应用中的所有session。  
 
-## SecurityManager
-*`SecurityManager`* 接口集成了所有的安全性操作。通过继承*`Authenticator`* 、*`Authorizer`* 、*`SessionManager`* 接口，简化了应用程序配置，便于使用。  
+## SecurityManager  
+*`SecurityManager`* 接口集成了所有的安全性操作。通过继承 *`Authenticator`* 、*`Authorizer`* 、*`SessionManager`* 接口，简化了应用程序配置，便于使用。  
 ```java
 public interface SecurityManager extends Authenticator, Authorizer, SessionManager {    
 	Subject login(Subject subject, AuthenticationToken authenticationToken) throws AuthenticationException;
@@ -266,7 +266,7 @@ public interface SecurityManager extends Authenticator, Authorizer, SessionManag
     Subject createSubject(SubjectContext context);
 }
 ```
-**1 (implements)** `CachingSecurityManager`
+**1 (implements)** `CachingSecurityManager`  
 `CachingSecurityManager` 提供缓存支持。  
 ```java
 public abstract class CachingSecurityManager implements SecurityManager, Destroyable, CacheManagerAware, EventBusAware {
@@ -275,7 +275,7 @@ public abstract class CachingSecurityManager implements SecurityManager, Destroy
 }
 ```
 
-**1.1 (extends)** `RealmSecurityManager`
+**1.1 (extends)** `RealmSecurityManager`  
 `RealmSecurityManager` 集成Realm。  
 ```java
 public abstract class RealmSecurityManager extends CachingSecurityManager {
@@ -283,7 +283,7 @@ public abstract class RealmSecurityManager extends CachingSecurityManager {
 }
 ```
 
-**1.1.1 (extends)** `AuthenticatingSecurityManager`
+**1.1.1 (extends)** `AuthenticatingSecurityManager`  
 `AuthenticatingSecurityManager` 通过静态代理`Authenticator`，提供身份验证的功能。  
 ```java
 
@@ -292,7 +292,7 @@ public abstract class AuthenticatingSecurityManager extends RealmSecurityManager
 }
 ```
 
-**1.1.1.1 (extends)** `AuthorizingSecurityManager`
+**1.1.1.1 (extends)** `AuthorizingSecurityManager`  
 `AuthorizingSecurityManager` 通过静态代理`Authorizer`，提供鉴权功能。  
 ```java
 public abstract class AuthorizingSecurityManager extends AuthenticatingSecurityManager {
@@ -300,7 +300,7 @@ public abstract class AuthorizingSecurityManager extends AuthenticatingSecurityM
 }
 ```
 
-**1.1.1.1.1 (extends)** `SessionsSecurityManager`
+**1.1.1.1.1 (extends)** `SessionsSecurityManager`  
 `SessionsSecurityManager` 通过静态代理`SessionManager`，提供session管理功能。  
 ```java
 public abstract class SessionsSecurityManager extends AuthorizingSecurityManager {
@@ -308,7 +308,7 @@ public abstract class SessionsSecurityManager extends AuthorizingSecurityManager
 }
 ```
 
-**1.1.1.1.1.1 (extends)** `DefaultSecurityManager`
+**1.1.1.1.1.1 (extends)** `DefaultSecurityManager`  
 `DefaultSecurityManager` Shiro默认提供的一个完整的SecurityManager实现。  
 ```java
 public class DefaultSecurityManager extends SessionsSecurityManager {
