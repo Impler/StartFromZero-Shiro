@@ -58,21 +58,21 @@ void merge(AuthenticationInfo info);
 
 **1.1/2.1 (implements)** `SimpleAuthenticationInfo` 实现了上面两者  
 
-**3 (implements)** *`Account`* 融合了`AuthenticationInfo`和`AuthorizationInfo`, `SimpleAccount`是其默认实现，通过静态代理`SimpleAuthenticationInfo`、`SimpleAuthorizationInfo`，既提供身份鉴别功能有能提供鉴权功能
+**3 (implements)** *`Account`* 融合了`AuthenticationInfo`和`AuthorizationInfo`, `SimpleAccount`是其默认实现，通过委托`SimpleAuthenticationInfo`、`SimpleAuthorizationInfo`，既提供身份鉴别功能有能提供鉴权功能
 ```java
 public class SimpleAccount implements Account, MergableAuthenticationInfo, SaltedAuthenticationInfo, Serializable {
     private SimpleAuthenticationInfo authcInfo;
-	// 静态代理方法
-	public PrincipalCollection getPrincipals() {
+    // 委托方法
+    public PrincipalCollection getPrincipals() {
         return authcInfo.getPrincipals();
     }
-	public Object getCredentials() {
+    public Object getCredentials() {
         return authcInfo.getCredentials();
     }
 	public ByteSource getCredentialsSalt() {
         return this.authcInfo.getCredentialsSalt();
     }
-	public void merge(AuthenticationInfo info) {
+    public void merge(AuthenticationInfo info) {
         authcInfo.merge(info);
         // Merge SimpleAccount specific info
         if (info instanceof SimpleAccount) {
@@ -92,75 +92,80 @@ public class SimpleAccount implements Account, MergableAuthenticationInfo, Salte
 ### Authenticator接口
 *`Authenticator`* 接口用于完成验证用户身份的操作，是Shiro API的入口。
 ```java
-public AuthenticationInfo authenticate(AuthenticationToken authenticationToken) throws AuthenticationException;
+public interface Authenticator {
+    public AuthenticationInfo authenticate(AuthenticationToken authenticationToken) throws AuthenticationException;
+}
 ```
 **1 (implements)** `AbstractAuthenticator` 所有Authenticator的抽象父类，细化了身份验证的流程，并提供了登录成功/失败以及退出的事件通知
 ```java
-// 通知监听器
-private Collection<AuthenticationListener> listeners;
-// 实现接口方法
-public final AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
-    try {
-		// 抽象出实际验证身份操作的方法
-        info = doAuthenticate(token);
-    } catch (Throwable t) {
-		// 当验证失败时，调用监听器通知
-        notifyFailure(token, ae);
-        throw ae;
+public abstract class AbstractAuthenticator implements Authenticator, LogoutAware {
+    // 通知监听器
+    private Collection<AuthenticationListener> listeners;
+    // 实现接口方法
+    public final AuthenticationInfo authenticate(AuthenticationToken token) throws AuthenticationException {
+        try {
+		    // 抽象出实际验证身份操作的方法
+            info = doAuthenticate(token);
+        } catch (Throwable t) {
+		    // 当验证失败时，调用监听器通知
+            notifyFailure(token, ae);
+            throw ae;
+        }
+	    // 验证成功时，调用监听器，通知
+        notifySuccess(token, info);
+        return info;
     }
-	// 验证成功时，调用监听器，通知
-    notifySuccess(token, info);
-    return info;
-}
 
-// 新增退出通知
-public void onLogout(PrincipalCollection principals) {
-    notifyLogout(principals);
+    // 新增退出通知
+    public void onLogout(PrincipalCollection principals) {
+        notifyLogout(principals);
+    }
+    // 完成验证工作的抽象方法
+    protected abstract AuthenticationInfo doAuthenticate(AuthenticationToken token) throws AuthenticationException;
 }
-// 完成验证工作的抽象方法
-protected abstract AuthenticationInfo doAuthenticate(AuthenticationToken token)
-            throws AuthenticationException;
 ```
 
 **1.1 (extends)** *`ModularRealmAuthenticator`* 结合配置的Realm(s)完成验证操作
 ```java
-// 实现父类抽象方法
-protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
-    Collection<Realm> realms = getRealms();
-    if (realms.size() == 1) {
-		// 只配置了一个Realm
-        return doSingleRealmAuthentication(realms.iterator().next(), authenticationToken);
-    } else {
-		// 配置了多个Realm
-        return doMultiRealmAuthentication(realms, authenticationToken);
+public class ModularRealmAuthenticator extends AbstractAuthenticator {
+    // 实现父类抽象方法
+    protected AuthenticationInfo doAuthenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
+        Collection<Realm> realms = getRealms();
+        if (realms.size() == 1) {
+		    // 只配置了一个Realm
+            return doSingleRealmAuthentication(realms.iterator().next(), authenticationToken);
+        } else {
+		    // 配置了多个Realm
+            return doMultiRealmAuthentication(realms, authenticationToken);
+        }
     }
-}
-// 多Realm的操作
-protected AuthenticationInfo doMultiRealmAuthentication(Collection<Realm> realms, AuthenticationToken token) {
-	// 验证策略，AllSuccessfulStrategy、AtLeastOneSuccessfulStrategy、FirstSuccessfulStrategy可供使用
-	// 不同的策略，最终表现在返回的AuthenticationInfo对象中，是合并上一步的结果还是代替等等
-	AuthenticationStrategy strategy = getAuthenticationStrategy();
-	AuthenticationInfo aggregate = strategy.beforeAllAttempts(realms, token)
-	//　遍历Realm，执行其验证操作
-	for (Realm realm : realms) {
-		// 根据策略的不同，重组AuthenticationInfo
-	    aggregate = strategy.beforeAttempt(realm, token, aggregate);
-	    if (realm.supports(token)) {
-	        AuthenticationInfo info = null;
-	        Throwable t = null;
-	        try {
-				// 调用real，实现验证操作
-	            info = realm.getAuthenticationInfo(token);
-	        } catch (Throwable throwable) {
-	        }
-			// 根据策略的不同，重组AuthenticationInfo
-	        aggregate = strategy.afterAttempt(realm, token, info, aggregate, t);
-	    } else {
-	    }
-	}
-	// 根据策略的不同，重组AuthenticationInfo
-	aggregate = strategy.afterAllAttempts(token, aggregate);
-	return aggregate;
+    // 多Realm的操作
+    protected AuthenticationInfo doMultiRealmAuthentication(Collection<Realm> realms, AuthenticationToken token) {
+        // 验证策略，AllSuccessfulStrategy、AtLeastOneSuccessfulStrategy、FirstSuccessfulStrategy可供使用
+        // 不同的策略，最终表现在返回的AuthenticationInfo对象中，是合并上一步的结果还是代替等等
+        AuthenticationStrategy strategy = getAuthenticationStrategy();
+        AuthenticationInfo aggregate = strategy.beforeAllAttempts(realms, token)
+        //　遍历Realm，执行其验证操作
+        for (Realm realm : realms) {
+            // 根据策略的不同，重组AuthenticationInfo
+            aggregate = strategy.beforeAttempt(realm, token, aggregate);
+            if (realm.supports(token)) {
+                AuthenticationInfo info = null;
+                Throwable t = null;
+                try {
+                    // 调用real，实现验证操作
+                    info = realm.getAuthenticationInfo(token);
+                } catch (Throwable throwable) {
+                }
+                // 根据策略的不同，重组AuthenticationInfo
+                aggregate = strategy.afterAttempt(realm, token, info, aggregate, t);
+            } else {
+            }
+        }
+        // 根据策略的不同，重组AuthenticationInfo
+        aggregate = strategy.afterAllAttempts(token, aggregate);
+        return aggregate;
+    }
 }
 ```
 [TODO 此处应有Authenticator继承层级图]
@@ -213,12 +218,14 @@ public interface Authorizer {
 ## Realm
 *`Realm`* 是一个系统安全组件，可以访问特定系统的安全部件，包括用户、角色、权限等。*`Realm`* 可以在Authentication和Ahthorization流程中工作。  
 ```java
-// 全局唯一的名称
-String getName();
-//验证前先判断是否支持该AuthenticationToken，否则不进行验证
-boolean supports(AuthenticationToken token);
-// 执行真正的验证工作
-AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException;
+public interface Realm {
+    // 全局唯一的名称
+    String getName();
+    //验证前先判断是否支持该AuthenticationToken，否则不进行验证
+    boolean supports(AuthenticationToken token);
+    // 执行真正的验证工作
+    AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException;
+}
 ```
 **1 (implements)** `CachingRealm` 基本的Realm抽象实现，提供cache功能  
 **1.1 (extends)** `AuthenticatingRealm` 在登录流程中提供用户身份验证功能，一般登录实现继承该抽象类即可  
@@ -261,7 +268,7 @@ Shiro提供了一套完整的企业级Session管理机制。其适用于所有�
 *`SecurityManager`* 接口集成了所有的安全性操作。通过继承 *`Authenticator`* 、*`Authorizer`* 、*`SessionManager`* 接口，简化了应用程序配置，便于使用。  
 ```java
 public interface SecurityManager extends Authenticator, Authorizer, SessionManager {    
-	Subject login(Subject subject, AuthenticationToken authenticationToken) throws AuthenticationException;
+    Subject login(Subject subject, AuthenticationToken authenticationToken) throws AuthenticationException;
     void logout(Subject subject);    
     Subject createSubject(SubjectContext context);
 }
@@ -284,7 +291,7 @@ public abstract class RealmSecurityManager extends CachingSecurityManager {
 ```
 
 **1.1.1 (extends)** `AuthenticatingSecurityManager`  
-`AuthenticatingSecurityManager` 通过静态代理`Authenticator`，提供身份验证的功能。  
+`AuthenticatingSecurityManager` 通过委托`Authenticator`，提供身份验证的功能。  
 ```java
 
 public abstract class AuthenticatingSecurityManager extends RealmSecurityManager {
@@ -293,7 +300,7 @@ public abstract class AuthenticatingSecurityManager extends RealmSecurityManager
 ```
 
 **1.1.1.1 (extends)** `AuthorizingSecurityManager`  
-`AuthorizingSecurityManager` 通过静态代理`Authorizer`，提供鉴权功能。  
+`AuthorizingSecurityManager` 通过委托`Authorizer`，提供鉴权功能。  
 ```java
 public abstract class AuthorizingSecurityManager extends AuthenticatingSecurityManager {
     private Authorizer authorizer;
@@ -301,7 +308,7 @@ public abstract class AuthorizingSecurityManager extends AuthenticatingSecurityM
 ```
 
 **1.1.1.1.1 (extends)** `SessionsSecurityManager`  
-`SessionsSecurityManager` 通过静态代理`SessionManager`，提供session管理功能。  
+`SessionsSecurityManager` 通过委托`SessionManager`，提供session管理功能。  
 ```java
 public abstract class SessionsSecurityManager extends AuthorizingSecurityManager {
     private SessionManager sessionManager;

@@ -3,21 +3,27 @@
 ## 基本构件
 ### 1 Environment 
 Environment对象是Shiro功能的基础，一般由解析配置文件生成。其包含了所有Shiro所需的功能性组件。
+
 #### 1.1 NamedObjectEnvironment
 NamedObjectEnvironment提供通过name查找Shiro组件对象的机制。
+
 ##### 1.1.1 DefaultEnvironment
 Environment接口的简单实现，提供基于key-value形式的对象存储。key为对象名，value为对象本身。
+
 #### 1.2 WebEnvironment
 Web环境特定下的Environment，新增访问FilterChainResolver、ServletContext、WebSecurityManager的API（getter/读操作）。
+
 ##### 1.2.1 MutableWebEnvironment
-在WebEnvironment的基础上增加设置FilterChainResolver、ServletContext、WebSecurityManager的API（setter/写操作）
+在WebEnvironment的基础上增加设置FilterChainResolver、ServletContext、WebSecurityManager的API（setter/写操作）  
+
 ###### 1.2.1.1 DefaultWebEnvironment
-默认WebEnvironment的实现。
+默认WebEnvironment的实现。  
+
 ####### 1.2.1.1.1 ResourceBasedWebEnvironment
-通过配置文件路径初始化WebEnvironment。
+通过配置文件路径初始化WebEnvironment。  
+
 ######## 1.2.1.1.1.1 IniWebEnvironment
 基于Ini格式配置文件初始化的WebEnvironment。  
-
 ![EnvironmentHierarchy](resources/images/EnvironmentHierarchy.png)
 
 ### 2 EnvironmentLoader
@@ -36,10 +42,10 @@ NameableFilter为Filter命名，如果没有显示指定，则默认使用在web
 ###### 3.1.1.1 OncePerRequestFilter
 OncePerRequestFilter 实现了doFilter()方法，用于处理每一次请求，并按照规则分发到Shiro特定的Filter中，具体需要子类实现doFilterInternal()方法。  
 
-####### 3.1.1.1.1 AbstractShiroFilter
+###### 3.1.1.1.1 AbstractShiroFilter
 AbstractShiroFilter 基本实现了所有Shiro Filter的标准行为，子类仅需要实现特定的配置逻辑，重写init()方法即可。  
 
-######## 3.1.1.1.1.1 ShiroFilter
+###### 3.1.1.1.1.1 ShiroFilter
 最基本的、可用的Shiro Filter。  
 需要配置在web.xml中，拦截所有请求，然后按照配置分发到具体的Access Control Filter。  
 此外，ShiroFilter需要依赖WebEnvironment的配置信息，所以必须在web.xml中配置EnvironmentLoaderListener，在容器启动时创建WebEnvironment对象。  
@@ -47,25 +53,25 @@ AbstractShiroFilter 基本实现了所有Shiro Filter的标准行为，子类仅
 ShiroFilter处理请求时序图：  
 ![ShiroFilterSeq](resources/images/ShiroFilterSeq.png)  
 
-####### 3.1.1.1.2 AdviceFilter
+###### 3.1.1.1.2 AdviceFilter
 AdviceFilter提供了类似AOP环绕增强的机制，方便在请求过滤器链处理前(preHandle)、处理后(postHandle)和完成后(afterCompletion)添加具体的逻辑。具体请看doFilterInternal()方法的实现：  
 ``` java
 public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain)
             throws ServletException, IOException {
     Exception exception = null;
-        try {
-			// 请求处理前，preHandler作为前置验证
-            boolean continueChain = preHandle(request, response);
-            if (continueChain) {
-				// 实际执行过滤器链
-                executeChain(request, response, chain);
-            }
-			// 过滤器链执行后
-            postHandle(request, response);
-        } catch (Exception e) {
-            exception = e;
+    try {
+        // 请求处理前，preHandler作为前置验证
+        boolean continueChain = preHandle(request, response);
+        if (continueChain) {
+            // 实际执行过滤器链
+            executeChain(request, response, chain);
+        }
+        // 过滤器链执行后
+        postHandle(request, response);
+    } catch (Exception e) {
+        exception = e;
     } finally {
-		// 在cleanup方法中调用afterCompletion()
+        // 在cleanup方法中调用afterCompletion()
         cleanup(request, response, exception);
     }
 }
@@ -130,16 +136,16 @@ protected void saveRequestAndRedirectToLogin(ServletRequest request, ServletResp
 ###### 4.1.1.1 AuthenticationFilter
 完成用户身份验证功能的Filter，作为基类，仅实现了检查用户是否已经验证通过的逻辑，至于没有验证的处理逻辑需要子类完成。  
 
-####### 4.1.1.1.1 AuthenticatingFilter
+###### 4.1.1.1.1 AuthenticatingFilter
 AuthenticationFilter可以处理用户验证逻辑的请求(登录请求)。  
 
 ###### 4.1.1.2 AuthorizationFilter
 鉴权过滤器的基类，提供未通过鉴权的请求的后续处理操作。  
 
-####### 4.1.1.2.1 PermissionsAuthorizationFilter
+###### 4.1.1.2.1 PermissionsAuthorizationFilter
 验证当前用户是否拥有访问某资源的权限。  
 
-####### 4.1.1.2.2 RolesAuthorizationFilter
+###### 4.1.1.2.2 RolesAuthorizationFilter
 验证当前用户是否拥有指定角色。  
 
 ![DefaultFilterHierarchy](resources/images/DefaultFilterHierarchy.png)  
