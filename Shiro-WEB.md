@@ -13,7 +13,7 @@ Environment接口的简单实现，提供基于key-value形式的对象存储。
 #### 1.2 *WebEnvironment*
 Web环境特定下的Environment，新增访问FilterChainResolver、ServletContext、WebSecurityManager的API（getter/读操作）。
 
-##### 1.2.1 MutableWebEnvironment
+##### 1.2.1 *MutableWebEnvironment*
 在WebEnvironment的基础上增加设置FilterChainResolver、ServletContext、WebSecurityManager的API（setter/写操作）  
 
 ###### 1.2.1.1 DefaultWebEnvironment
