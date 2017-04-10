@@ -168,7 +168,7 @@ public class ModularRealmAuthenticator extends AbstractAuthenticator {
     }
 }
 ```
-[TODO 此处应有Authenticator继承层级图]
+![AuthenticatorHierarchy](resources/images/AuthenticatorHierarchy.png)
 
 ## Authorization
 鉴权，即访问控制，是对资源访问管理的过程。控制谁可以做什么。  
@@ -213,7 +213,7 @@ public interface Authorizer {
 }
 ```
 *注意*：以check开头的鉴权方法，如果没有指定的权限将会抛出AuthorizationException异常。  
-[TODO 此处应有Authorizer继承层级图]
+![AuthorizerHierarchy](resources/images/AuthorizerHierarchy.png)
 
 ## Realm
 *`Realm`* 是一个系统安全组件，可以访问特定系统的安全部件，包括用户、角色、权限等。*`Realm`* 可以在Authentication和Ahthorization流程中工作。  
@@ -258,7 +258,7 @@ public abstract class AuthorizingRealm extends AuthenticatingRealm
 **1.1.1.1 (extends)** `SimpleAccountRealm`  
 **1.1.1.1.1 (extends)** `IniRealm`  
 
-[TODO 此处应有Reaml继承层级图]
+![RealmHierarchy](resources/images/RealmHierarchy.png)
 
 ## SessionManager  
 Shiro提供了一套完整的企业级Session管理机制。其适用于所有程序，而不依赖Web容器或EJB。  
@@ -324,3 +324,4 @@ public class DefaultSecurityManager extends SessionsSecurityManager {
     protected SubjectFactory subjectFactory;
 }
 ```
+![SecurityManagerHierarchy](resources/images/SecurityManagerHierarchy.png)
