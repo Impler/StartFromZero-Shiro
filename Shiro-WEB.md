@@ -154,8 +154,10 @@ AuthenticationFilter可以处理用户验证逻辑的请求(登录请求)。
 #### 4.2 图示
 登录请求时序图
 ![登录请求时序图](resources/images/LoginRequest.png)  
-
-## Tips
+- ShiroFilter像是一个流程控制转发站，根据请求URL匹配配置的过滤器链，然后依次过滤
+- FormAuthenticationFilter负责登录相关验证操作，当登录成功时，跳转至配置的success页面，或者登录前的url；验证不通过则跳转回登录页，并把错误信息返回回去。
+- Shiro提交登录请求的url为登录页的url，只不过登录时，使用post提交，Shiro根据提交方法的不同判断访问的是登录页面，还是登录操作。
+## Tip
 Shiro内部对工厂模式的使用案例：
 ![ShiroFactory](resources/images/ShiroFactory.png)  
 充分运用Java特性，首先抽象出一个工厂接口Factory<T>，继而实现统一的工厂方法，层层递进，一步步重用公共代码，下放具体接口，直到具体实现。代码层次清晰，便于扩展。  
