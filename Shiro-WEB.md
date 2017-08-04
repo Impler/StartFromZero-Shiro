@@ -151,6 +151,10 @@ AuthenticationFilter可以处理用户验证逻辑的请求(登录请求)。
 ![DefaultFilterHierarchy](resources/images/DefaultFilterHierarchy.png)  
 //todo access control filter时序图
 
+#### 4.2 图示
+登录请求时序图
+![登录请求时序图](resources/images/LoginRequest.png)  
+
 ## Tips
 Shiro内部对工厂模式的使用案例：
 ![ShiroFactory](resources/images/ShiroFactory.png)  
