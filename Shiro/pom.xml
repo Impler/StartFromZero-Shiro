@@ -2,14 +2,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.study</groupId>
-	<artifactId>Shiro</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>shiro</artifactId>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Shiro Maven Webapp</name>
 	<url>http://maven.apache.org</url>
+	<build>
+		<finalName>Shiro</finalName>
+	</build>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.shiro>1.3.0</version.shiro>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -23,9 +28,9 @@
 			<version>${version.shiro}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.shiro</groupId>
-		    <artifactId>shiro-ehcache</artifactId>
-		    <version>${version.shiro}</version>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-ehcache</artifactId>
+			<version>${version.shiro}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -53,7 +58,7 @@
 			<version>5.1.38</version>
 		</dependency>
 	</dependencies>
-	<build>
-		<finalName>Shiro</finalName>
-	</build>
+	<modules>
+		<module>Shiro-Core</module>
+	</modules>
 </project>
